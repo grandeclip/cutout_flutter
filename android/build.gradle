@@ -1,0 +1,59 @@
+group = "com.grandeclip.cutout"
+version = "25.1.0"
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.1.0")
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: "com.android.library"
+
+android {
+    if (project.android.hasProperty("namespace")) {
+        namespace = "com.grandeclip.cutout"
+    }
+
+    compileSdk = 34
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/java"
+    }
+
+    defaultConfig {
+        minSdk = 21
+
+        externalNativeBuild {
+            cmake {
+                // Enabling exception, RTTI and setting C++ standard version
+                cppFlags '-frtti -fexceptions -std=c++17'
+
+                // Shared runtime for shared libraries
+                arguments "-DANDROID_STL=c++_shared"
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+}
